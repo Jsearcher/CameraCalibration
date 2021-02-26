@@ -1,0 +1,27 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.titled-address .label {
+  	-fx-font: 12px System;
+}
+
+.bordered-titled-title {
+  	-fx-background-color: white;
+  	-fx-padding: 0 5 0 5;
+  	-fx-translate-y: -10;
+}
+
+.bordered-titled-border {
+  	-fx-content-display: top;
+  	-fx-border-insets: 0 5 5 5;
+  	-fx-border-color: #aaaaaa;
+  	-fx-border-width: 1;
+}
+
+.bordered-titled-content {
+  	-fx-padding: 10 10 10 10;
+}
+
+.bordered-image-border {
+  	-fx-content-display: center;
+  	-fx-border-color: #aaaaaa;
+  	-fx-border-width: 1;
+}

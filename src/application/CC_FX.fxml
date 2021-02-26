@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.CC_Controller">
+   <center>
+      <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane prefHeight="300.0" prefWidth="400.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0">
+                     <children>
+                        <ImageView fx:id="originalFrame" fitWidth="400.0" onMouseClicked="#getPosition" pickOnBounds="true" preserveRatio="true">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <Label fx:id="originalLabel" text="&lt; Camera Stream &gt;" visible="false" />
+            <ScrollPane prefHeight="300.0" prefWidth="400.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0">
+                     <children>
+                        <ImageView fx:id="calibrateFrame" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <Label fx:id="procStreamLabel" text="&lt; Detected Corners &gt;" visible="false" />
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <Button fx:id="saveParamButton" disable="true" mnemonicParsing="false" onAction="#saveParameters" text="Save Param" />
+                  <Button fx:id="solveButton" disable="true" mnemonicParsing="false" onAction="#solvePnp" text="Solve" />
+                  <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closeProc" text="Close" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets right="10.0" top="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+   <left>
+      <VBox alignment="TOP_CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+               <children>
+                  <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Calibration Mode" />
+                  <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <RadioButton fx:id="radioRM" mnemonicParsing="false" onAction="#onRealtimeMode" selected="true" text="Realtime Mode">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="radioGroup_CM" />
+                                 </toggleGroup>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="radioFM" mnemonicParsing="false" onAction="#onFileMode" text="File Mode" toggleGroup="$radioGroup_CM" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </StackPane>
+            <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+               <children>
+                  <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Realtime Calibration" />
+                  <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                     <children>
+                        <HBox alignment="CENTER" spacing="30.0">
+                           <children>
+                              <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+                                 <children>
+                                    <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Camera 1" />
+                                    <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                                       <children>
+                                          <Button fx:id="connCamera1" disable="true" mnemonicParsing="false" onAction="#startCamera" prefWidth="100.0" text="Connect" />
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </StackPane>
+                              <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+                                 <children>
+                                    <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Camera 2" />
+                                    <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                                       <children>
+                                          <Button fx:id="connCamera2" disable="true" mnemonicParsing="false" prefWidth="100.0" text="Connect" />
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </StackPane>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </StackPane>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </StackPane>
+            <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+               <children>
+                  <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="File Calibration" />
+                  <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                     <children>
+                        <Button fx:id="selectFileButton" disable="true" mnemonicParsing="false" text="Select Files" />
+                     </children>
+                  </StackPane>
+               </children>
+            </StackPane>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+                     <children>
+                        <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Check Board Insformation" />
+                        <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                           <children>
+                              <HBox prefHeight="100.0">
+                                 <children>
+                                    <VBox prefHeight="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                  <Label text="Corners Width: ">
+                                                   <HBox.margin>
+                                                      <Insets right="5.0" />
+                                                   </HBox.margin></Label>
+                                                  <TextField fx:id="numHorCorners" maxWidth="40.0" text="9">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="Corners Height: " />
+                                                <TextField fx:id="numVertCorners" maxWidth="40.0" text="6">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="Square Width: ">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin></Label>
+                                                <TextField fx:id="lengthHorCorners" maxWidth="40.0" text="24.5">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="Square Height: ">
+                                                   <HBox.margin>
+                                                      <Insets right="6.0" />
+                                                   </HBox.margin></Label>
+                                                <TextField fx:id="lengthVertCorners" maxWidth="40.0" text="24.5">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </StackPane>
+                  <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+                     <children>
+                        <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Calibration Control" />
+                        <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                           <children>
+                              <VBox alignment="CENTER" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="detectButton" disable="true" maxWidth="120.0" mnemonicParsing="false" onAction="#detectCorners" text="Detect Corners" />
+                                    <Button fx:id="calibrateButton" disable="true" maxWidth="120.0" mnemonicParsing="false" onAction="#doCalibration" text="Calibration">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin></Button>
+                                    <Button fx:id="undistButton" disable="true" maxWidth="120.0" mnemonicParsing="false" onAction="#doUndistortion" text="Undistortion">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Button>
+                                    <CheckBox fx:id="checkUseParam" disable="true" mnemonicParsing="false" onAction="#onCheckUse" text="Use Saved Param." />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </StackPane>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Label text="Number of Detected Image: " textFill="RED">
+                           <padding>
+                              <Insets left="6.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="numSaved" editable="false" maxWidth="30.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                     <children>
+                          <Label text="Boards #" />
+                          <TextField fx:id="numBoards" maxWidth="50.0" text="20" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <StackPane alignment="TOP_CENTER" styleClass="bordered-titled-border" stylesheets="@application.css">
+               <children>
+                  <Label styleClass="bordered-titled-title" stylesheets="@application.css" text="Record and Test Area" />
+                  <StackPane styleClass="bordered-titled-content" stylesheets="@../../bin/application/application.css">
+                     <children>
+                        <VBox spacing="8.0">
+                           <children>
+                              <HBox spacing="12.0">
+                                 <children>
+                                    <VBox fx:id="recordArea" disable="true" spacing="5.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <VBox alignment="TOP_CENTER" spacing="5.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="PositionX: " />
+                                                            <TextField fx:id="clickX" disable="true" editable="false" maxWidth="50.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="PositionY: " />
+                                                            <TextField fx:id="clickY" disable="true" maxWidth="50.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox alignment="TOP_CENTER" spacing="5.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="WorldX: " />
+                                                            <TextField fx:id="worldX" alignment="CENTER" maxWidth="50.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="WorldY: " />
+                                                            <TextField fx:id="worldY" alignment="CENTER" maxWidth="50.0" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="WorldZ: " />
+                                                            <TextField fx:id="worldZ" alignment="CENTER" maxWidth="50.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" spacing="10.0">
+                                             <children>
+                                                <Button fx:id="recordButton" mnemonicParsing="false" onAction="#recordPoint" onMouseClicked="#resetRecord" text="Record" />
+                                                <Label fx:id="recordCount" prefHeight="10.0" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <VBox fx:id="testArea" alignment="TOP_CENTER" disable="true" spacing="5.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="TestX: " />
+                                                <TextField fx:id="testX" alignment="CENTER" maxWidth="50.0" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="TestY: " />
+                                                <TextField fx:id="testY" alignment="CENTER" maxWidth="50.0" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="TestZ: " />
+                                                <TextField fx:id="testZ" alignment="CENTER" maxWidth="50.0" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER" spacing="20.0">
+                                             <children>
+                                                <Button fx:id="testMark" mnemonicParsing="false" onAction="#markPosition" text="Mark" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </children>
+            </StackPane>
+            <TextArea fx:id="messageArea" maxWidth="-Infinity" prefHeight="150.0" prefWidth="340.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin></TextArea>
+         </children>
+         <BorderPane.margin>
+            <Insets left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </left>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</BorderPane>
